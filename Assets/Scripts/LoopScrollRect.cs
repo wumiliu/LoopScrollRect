@@ -723,9 +723,11 @@ namespace UnityEngine.UI
         private void UpdateScrollbars(Vector2 offset)
         {
             if (m_HorizontalScrollbar)
-            {
-                if (m_ContentBounds.size.x > 0)
-                    m_HorizontalScrollbar.size = Mathf.Clamp01((m_ViewBounds.size.x - Mathf.Abs(offset.x)) / m_ContentBounds.size.x);
+			{
+				//==========LoopScrollRect==========
+                if (m_ContentBounds.size.x > 0 && totalCount > 0)
+					m_HorizontalScrollbar.size = (itemTypeEnd - itemTypeStart + 1.0f) / totalCount;	//Mathf.Clamp01((m_ViewBounds.size.x - Mathf.Abs(offset.x)) / m_ContentBounds.size.x);
+				//==========LoopScrollRect==========
                 else
                     m_HorizontalScrollbar.size = 1;
 
@@ -733,9 +735,11 @@ namespace UnityEngine.UI
             }
 
             if (m_VerticalScrollbar)
-            {
-                if (m_ContentBounds.size.y > 0)
-                    m_VerticalScrollbar.size = Mathf.Clamp01((m_ViewBounds.size.y - Mathf.Abs(offset.y)) / m_ContentBounds.size.y);
+			{
+				//==========LoopScrollRect==========
+				if (m_ContentBounds.size.y > 0 && totalCount > 0)
+					m_VerticalScrollbar.size = (itemTypeEnd - itemTypeStart + 1.0f) / totalCount;	//Mathf.Clamp01((m_ViewBounds.size.y - Mathf.Abs(offset.y)) / m_ContentBounds.size.y);
+				//==========LoopScrollRect==========
                 else
                     m_VerticalScrollbar.size = 1;
 
@@ -760,10 +764,19 @@ namespace UnityEngine.UI
         {
             get
             {
-                UpdateBounds();
-                if (m_ContentBounds.size.x <= m_ViewBounds.size.x)
-                    return (m_ViewBounds.min.x > m_ContentBounds.min.x) ? 1 : 0;
-                return (m_ViewBounds.min.x - m_ContentBounds.min.x) / (m_ContentBounds.size.x - m_ViewBounds.size.x);
+				UpdateBounds();
+				//==========LoopScrollRect==========
+				if(totalCount > 0)
+				{
+					if(itemTypeStart <= 0)
+						return 0;
+					else if(itemTypeEnd >= totalCount)
+						return 1;
+					return 1.0f * itemTypeStart / (totalCount - (itemTypeEnd - itemTypeStart));
+				}
+				else
+					return 0;
+				//==========LoopScrollRect==========
             }
             set
             {
@@ -775,11 +788,19 @@ namespace UnityEngine.UI
         {
             get
             {
-                UpdateBounds();
-                if (m_ContentBounds.size.y <= m_ViewBounds.size.y)
-                    return (m_ViewBounds.min.y > m_ContentBounds.min.y) ? 1 : 0;
-                ;
-                return (m_ViewBounds.min.y - m_ContentBounds.min.y) / (m_ContentBounds.size.y - m_ViewBounds.size.y);
+				UpdateBounds();
+				//==========LoopScrollRect==========
+				if(totalCount > 0)
+				{
+					if(itemTypeStart <= 0)
+						return 0;
+					else if(itemTypeEnd >= totalCount)
+						return 1;
+					return 1.0f * itemTypeStart / (totalCount - (itemTypeEnd - itemTypeStart));
+				}
+				else
+					return 0;
+				//==========LoopScrollRect==========
             }
             set
             {
