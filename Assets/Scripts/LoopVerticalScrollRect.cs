@@ -6,11 +6,20 @@ namespace UnityEngine.UI
 {
     public class LoopVerticalScrollRect : LoopScrollRect
     {
+        GridLayoutGroup mLayout;
         protected override float GetSize(RectTransform item)
         {
-            return LayoutUtility.GetPreferredHeight(item) + contentSpacing;
+            // return LayoutUtility.GetPreferredHeight(item) + contentSpacing;
+            return GetCellSize(item) + contentSpacing;
         }
-
+        float GetCellSize(RectTransform item)
+        {
+            if (mLayout != null)
+            {
+                return mLayout.cellSize.y;
+            }
+            return LayoutUtility.GetPreferredHeight(item);
+        }
         protected override float GetDimension(Vector2 vector)
         {
             return vector.y;
@@ -26,8 +35,8 @@ namespace UnityEngine.UI
             base.Awake();
             directionSign = -1;
 
-            GridLayoutGroup layout = content.GetComponent<GridLayoutGroup>();
-            if (layout != null && layout.constraint != GridLayoutGroup.Constraint.FixedColumnCount)
+            mLayout = content.GetComponent<GridLayoutGroup>();
+            if (mLayout != null && mLayout.constraint != GridLayoutGroup.Constraint.FixedColumnCount)
             {
                 Debug.LogError("[LoopHorizontalScrollRect] unsupported GridLayoutGroup constraint");
             }
