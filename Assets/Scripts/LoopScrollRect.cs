@@ -389,7 +389,11 @@ namespace UnityEngine.UI
                 return 0;
             }
             float size = 0;
-            for (int i = 0; i < contentConstraintCount; i++)
+            //如果格子的话,不足一行的需要先补足一行，不然会导致格子数量缺少（修复bug）
+            //int Count = contentConstraintCount;(有问题的处理)
+            //
+            int Count = contentConstraintCount - content.childCount % contentConstraintCount;
+            for (int i = 0; i < Count; i++)
             {
                 RectTransform newItem = InstantiateNextItem(itemTypeEnd);
                 size = Mathf.Max(GetSize(newItem), size);
